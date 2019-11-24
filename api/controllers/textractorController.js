@@ -1,7 +1,5 @@
 'use strict';
 
-var express = require('express')
-const app = express();
 var crypto = require('crypto');
 var fs = require('fs');
 
@@ -10,21 +8,43 @@ var ssn; //Session variable
 
 
 exports.upload = function(req, res) {
+
+    var multiparty = require('multiparty');
+    var form = new multiparty.Form();
     
     //Create session
     ssn = req.session;
-    console.log(ssn);
-
-    //Get the Image file
-
 
     //Generate Token
     var token = crypto.randomBytes(64).toString('hex');
     ssn.token = token;
 
     //Store the image with token name (async)
-        //create folder with token name
-        //store all images
+    form.parse(req, function(err, fields, files) {  
+
+        var imgArray = files;
+        //console.log(imgArray.file[0].originalFilename);
+        var images = [imgArray.file1[0]];
+        if(imgArray.file2) images.push(imgArray.file2[0]);
+        if(imgArray.file3) images.push(imgArray.file3[0]);
+        if(imgArray.file4) images.push(imgArray.file4[0]);
+        if(imgArray.file5) images.push(imgArray.file5[0]);
+
+
+        fs.mkdirSync('api/files/'+token+'/', { recursive: true });
+        var path = 'api/files/'+token+'/';
+        
+        var i;
+        for (i=0;i<images.length;i++) {
+   
+            var newPath = path;
+            var singleImg = images[i];
+            newPath+= singleImg.originalFilename;          
+            readAndWriteFile(singleImg, newPath);
+
+        }
+    
+    });
 
     //return token name
     res.json({ token : token });
@@ -79,3 +99,14 @@ exports.art = function(req, res) {
 };
 
 
+
+//Business Functions 
+function readAndWriteFile(singleImg, newPath) {
+
+    fs.readFile(singleImg.path , function(err,data) {
+        fs.writeFile(newPath,data, function(err) {
+            if (err) console.log('Cannot Copy image to folder :'+err);
+            //console.log('Fitxer: '+singleImg.originalFilename +' - '+ newPath);
+        });
+    });
+}
