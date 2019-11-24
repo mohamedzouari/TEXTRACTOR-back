@@ -20,6 +20,11 @@
     "nodemon": "^2.0.1"
   },
   "dependencies": {
-    "express": "^4.17.1"
+    "bcryptjs": "^2.4.3",
+    "crypto": "^1.0.1",
+    "express": "^4.17.1",
+    "express-session": "^1.17.0",
+    "file-system": "^2.2.2",
+    "jsonwebtoken": "^8.5.1"
   }
 }

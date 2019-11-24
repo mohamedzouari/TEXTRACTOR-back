@@ -6,7 +6,7 @@ var router = express.Router();
 var textractor = require('../controllers/textractorController');
 
   // todoList Routes
-  router.get('/upload',textractor.upload);
+  router.post('/upload',textractor.upload);
 
   router.get('/convert',textractor.convert);
   
