@@ -52,34 +52,51 @@ exports.upload = function(req, res) {
 
 exports.convert = function(req, res) {
     
-    //verify token
-    ssn = req.session;
 
-    //converts all images in the folder with the token name
+        //verify token
+        ssn = req.session.token;
 
-    //returns text
+        if(ssn == req.body.token){
+
+            //converts all images in the folder with the token name
+
+            //returns text
+
+        res.json({ token : ssn });
+
+        }else {
+            res.json({ error : 'User not identified' });
+        }
+
     
-    res.json({ token : ssn.token });
 };
 
 exports.download = function(req, res) {
 
     
 
-    //Verify Token
+    //verify token
+    ssn = req.session.token;
 
-    //Modified Text Processing
+    if(ssn == req.body.token){
 
-    //Selecting a file format
-    
-    //Returns the file to download & Session Close
+        //Modified Text Processing
 
-    req.session.destroy((err) => {
-        if(err) {
-            return console.log(err);
-        }
-    });
-    res.json("download");
+        //Selecting a file format
+        
+        //Returns the file to download
+
+        req.session.destroy((err) => {
+            if(err) {
+                return console.log(err);
+            }
+        });
+        res.json("download");
+
+    }else {
+        res.json({ error : 'User not identified' });
+    }
+
 };
 
 exports.donate = function(req, res) {
