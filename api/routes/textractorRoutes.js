@@ -12,7 +12,7 @@ var textractor = require('../controllers/textractorController');
   
   router.get('/download',textractor.download);
 
-  router.get('/donate',textractor.donate);
+  router.post('/donate',textractor.donate);
 
   router.get('/art',textractor.art);
       

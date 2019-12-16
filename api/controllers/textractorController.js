@@ -176,15 +176,24 @@ exports.download = function(req, res) {
 
 };
 
-exports.donate = function(req, res) {
+exports.donate = async function(req, res) {
     
-    //Gets the amount of money to donate
+    const stripe = require('stripe')('sk_test_RzPlsfSBgiJIWZopii0sfOnw008i6CPjR6'); 
 
-    //Donating Process
-        // https://stripe.com/docs/api
+    const token = request.body.stripeToken; // Using Express
 
-    //Returns Result
-    res.json("donate");
+    const charge = await stripe.charges.create({
+        amount: 999,
+        currency: 'usd',
+        description: 'Example charge',
+        source: token,
+    });
+
+    res.send({
+        result : charge
+    });
+ 
+     
 };
 
 exports.art = function(req, res) {
