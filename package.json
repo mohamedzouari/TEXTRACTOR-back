@@ -25,14 +25,17 @@
     "express": "^4.17.1",
     "express-session": "^1.17.0",
     "file-system": "^2.2.2",
+    "form-data": "^3.0.0",
     "fs-extra": "^8.1.0",
     "jsonwebtoken": "^8.5.1",
     "mime": "^2.4.4",
     "multiparty": "^4.2.1",
+    "node-fetch": "^2.6.0",
     "officegen": "^0.6.3",
     "path": "^0.12.7",
     "pdfkit": "^0.11.0",
     "pdfmake": "^0.1.63",
+    "request": "^2.88.0",
     "stripe": "^7.14.0"
   }
 }

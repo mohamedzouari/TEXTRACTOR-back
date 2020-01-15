@@ -4,6 +4,9 @@ var crypto = require('crypto');
 var fs = require('fs-extra');
 var PDFDocument = require('pdfkit');
 var officegen = require('officegen');
+var request = require('request');
+var FormData = require('form-data');
+const fetch = require('node-fetch');
 
 var ssn; //Session variable
 
@@ -55,47 +58,57 @@ exports.upload = function(req, res) {
 exports.convert = function(req, res) {
     
 
+        var response;
+
         //verify token
         ssn = req.session.token;
 
+
+       
 
         if(ssn == req.body.token){
 
             //gets all images in the folder with the token name
             var path = 'api/files/'+ssn+'/';
+            var returnedText;
             fs.readdir(path, function (err, files) {
                 //handling error
                 if (err) {
                     return console.log('Unable to scan directory: ' + err);
                 } 
                 //listing all files using forEach
+                var formData ={};
+                var i= 1;
                 files.forEach(function (file) {
-
                     // file processing
-                    console.log(file); 
+                         formData['file'+i]= {
+                              value: fs.createReadStream(path+file),
+                              options: {
+                                filename: file,
+                              }
+                        };
+                        i+=1;                    
                 });
+                
+                request.post({url:'http://localhost:8000/textractor/convert/', formData: formData}, 
+                function cb(err, httpResponse, body) {
+                    if (err) {
+                        console.error('upload failed:', err);
+                    }
+                        console.log('Upload successful!  Server responded with:', body);
+
+                        response = JSON.parse(body);
+                        
+                        res.json({ 
+                            token : ssn,
+                            text : response.ConvertedText
+                        });
+                });
+
             });
 
 
-            /* Send files to python API here
-
-                let fetch = require('node-fetch');
-
-                fetch('http://localhost', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: '{}'
-                }).then(response => {
-                return response.json();
-                }).catch(err => {console.log(err);});
-            */
-
-            //returns text
-
-        res.json({ 
-            token : ssn,
-            text : "converted text"
-        });
+        
 
         }else {
             res.json({ error : 'User not identified' });
