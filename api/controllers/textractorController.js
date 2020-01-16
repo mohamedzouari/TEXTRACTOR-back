@@ -134,7 +134,7 @@ exports.download = function(req, res) {
                 //customize font
                 doc.font('api/assets/fonts/Roboto-Black.ttf')
                 .fontSize(25)
-                .text('Some text with an embedded font!', 100, 100);
+                .text(req.body.text, 100, 100);
                 doc.end();
   
                 //Return PDF
@@ -152,7 +152,7 @@ exports.download = function(req, res) {
                 // Create the word document
                 let docx = officegen('docx');
                 let pObj = docx.createP();
-                pObj.addText('This is my text',{ bold: true, underline: true,color: '00ffff',align:'center' });    
+                pObj.addText(req.body.text,{ bold: true, underline: true,color: '00ffff',align:'center' });    
 
                 docx.on('error', function(err) {
                     console.log(err);
@@ -165,7 +165,7 @@ exports.download = function(req, res) {
                 break;
             }
             default:{
-                res.json({text : "text"});
+                res.json({text : req.body.text});
                 break;
             }
         }
